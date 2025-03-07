@@ -172,7 +172,26 @@
 </head>
 <body>
     <div class="timeline-container">
-        <h2>Stakeholders</h2>
+        <h2>Pain Points: Who experiences them and when?</h2>
+        <div class="stakeholder-icons">
+            <div class="stakeholder">
+                <div class="icon">⚙️</div>
+                <div class="stakeholder-name">Process Management</div>
+            </div>
+            <div class="stakeholder">
+                <div class="icon">💽</div>
+                <div class="stakeholder-name">Data Management</div>
+            </div>
+            <div class="stakeholder">
+                <div class="icon">💬</div>
+                <div class="stakeholder-name">Communication</div>
+            </div>
+            <div class="stakeholder">
+                <div class="icon">🧮</div>
+                <div class="stakeholder-name">Resource Allocation</div>
+            </div>
+        </div>
+
         <div class="stakeholder-icons">
             <div class="stakeholder">
                 <div class="icon">👷</div>
@@ -336,13 +355,13 @@
                 
                 // Check which stakeholders are mentioned
                 if (index === 0) { // Site Feasibility Assessment
-                    relevantStakeholders.push('developers', 'land owners', 'data analysis teams', 'public officials');
+                    relevantStakeholders.push('developers', 'land owners', 'data analysis teams', 'public officials','data management');
                 } else if (index === 1) { // Financing
-                    relevantStakeholders.push('developers', 'financing agencies');
+                    relevantStakeholders.push('developers', 'financing agencies','resource allocation');
                 } else if (index === 2) { // Entitlements
-                    relevantStakeholders.push('developers', 'public officials', 'zoning officers', 'homeowners\' associations');
+                    relevantStakeholders.push('developers', 'public officials', 'zoning officers', 'homeowners\' associations','process management','data management','communication');
                 } else if (index === 3) { // Inspections
-                    relevantStakeholders.push('developers', 'city inspectors');
+                    relevantStakeholders.push('developers', 'city inspectors', 'process management','resource allocation');
                 }
                 
                 // Apply inactive class to non-relevant stakeholders
