@@ -3,148 +3,390 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interactive Timeline</title>
+    <title>Optimized Housing Development Timeline</title>
     <link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2C1C5A;
+            --accent-color: #FF3928;
+            --light-bg: #f9f9f9;
+            --card-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --card-hover-shadow: 0 6px 16px rgba(0,0,0,0.12);
+            --transition-speed: 0.3s;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
         body {
             font-family: 'IBM Plex Sans', sans-serif;
-            max-width: 960px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
             line-height: 1.6;
+            color: #333;
+            background-color: #fff;
         }
         
         h1, h2, h3, h4, h5, h6, .timeline-title {
             font-family: 'Spectral', serif;
+            color: var(--primary-color);
+        }
+        
+        h3 {
+            font-size: 1.8rem;
+            margin: 40px 0 20px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        h3::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--accent-color);
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .page-header h1 {
+            font-size: 2.4rem;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+        }
+        
+        .page-header p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: #555;
         }
         
         .timeline-container {
-            margin-top: 40px;
+            margin-top: 30px;
+            position: relative;
+            padding-bottom: 60px;
+        }
+        
+        /* Pain Points Section */
+        .pain-points-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+            margin: 30px 0;
+            padding-bottom: 20px;
+        }
+        
+        .pain-point {
+            background-color: var(--light-bg);
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            box-shadow: var(--card-shadow);
             position: relative;
         }
         
-        .stakeholder-icons {
+        .pain-point:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--card-hover-shadow);
+        }
+        
+        .pain-point-icon {
+            width: 70px;
+            height: 70px;
+            background-color: white;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-around;
-            margin-bottom: 20px;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 36px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .pain-point-name {
+            font-weight: 500;
+            font-size: 16px;
+        }
+        
+        .pain-point-definition {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            z-index: 100;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+            transform: translateY(-10px);
+            box-shadow: var(--card-shadow);
+            margin-top: 10px;
+        }
+        
+        .pain-point:hover .pain-point-definition {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        
+        /* Stakeholders Section */
+        .stakeholders-container {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            grid-template-rows: repeat(2, auto);
+            gap: 20px;
+            margin: 30px 0;
+            justify-items: center;
+            text-align: center;
         }
         
         .stakeholder {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 100px;
+            text-align: center;
+            transition: opacity var(--transition-speed), transform var(--transition-speed);
         }
         
-        .icon {
-            width: 50px;
-            height: 50px;
-            background-color: #f0f0f0;
+        .stakeholder.inactive, .pain-point.inactive {
+            opacity: 0.35;
+        }
+        
+        .stakeholder-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--light-bg);
             border-radius: 50%;
             display: flex;
             justify-content: center;
             align-items: center;
-            margin-bottom: 5px;
-            font-size: 24px;
+            margin-bottom: 12px;
+            font-size: 36px;
+            transition: transform var(--transition-speed), box-shadow var(--transition-speed);
+            box-shadow: var(--card-shadow);
         }
         
         .stakeholder-name {
+            font-weight: 500;
+            font-size: 14px;
+            height: auto;
+            max-width: 120px;
+        }
+
+        .stakeholder-category {
+            margin-bottom: 40px;
+        }
+        .category-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 20px;
             text-align: center;
-            font-size: 12px;
-            height: 40px;
+        }
+
+        .stakeholders-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+        
+        /* Timeline Section */
+        .timeline-wrapper {
+            margin: 60px 0;
+            position: relative;
         }
         
         .timeline {
             display: flex;
             justify-content: space-between;
             position: relative;
-            margin-bottom: 50px;
+            padding: 0 30px;
         }
         
         .timeline::after {
             content: '';
             position: absolute;
-            width: 100%;
-            height: 4px;
-            background-color: #2C1C5A;
-            top: 15px;
-            left: 0;
-            z-index: -1;
+            width: calc(100% - 60px);
+            height: 6px;
+            background-color: var(--primary-color);
+            top: 35px;
+            left: 30px;
+            z-index: 0;
+            border-radius: 3px;
         }
         
         .timeline-item {
-            width: 80%;
+            width: 220px;
+            z-index: 1;
             cursor: pointer;
             position: relative;
+            transition: transform var(--transition-speed);
+        }
+        
+        .timeline-item:hover {
+            transform: translateY(-5px);
         }
         
         .timeline-point {
-            width: 30px;
-            height: 30px;
-            background-color: #FF3928;
+            width: 40px;
+            height: 40px;
+            background-color: var(--accent-color);
             border-radius: 50%;
-            margin: 0 auto 10px;
+            margin: 15px auto 25px;
+            position: relative;
+            z-index: 2;
+            box-shadow: 0 0 0 6px rgba(255, 57, 40, 0.2);
+            transition: box-shadow var(--transition-speed), transform var(--transition-speed);
+        }
+        
+        .timeline-item:hover .timeline-point {
+            box-shadow: 0 0 0 10px rgba(255, 57, 40, 0.15);
+            transform: scale(1.1);
         }
         
         .timeline-title {
             text-align: center;
-            font-weight: bold;
-            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 22px;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            transition: color var(--transition-speed);
+        }
+        
+        .timeline-item:hover .timeline-title {
+            color: var(--accent-color);
         }
         
         .timeline-content {
             display: none;
-            background-color: #f9f9f9;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            margin-top: 20px;
+            background-color: var(--light-bg);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+            margin-top: 30px;
             position: absolute;
-            width: 150%;
+            width: 200%;
             z-index: 10;
-            left: 0;
-            max-width: 960px;
-            overflow-x: hidden;
+            left: -50%;
+            max-width: 1000px;
+            overflow-x: visible;
+            border-top: 5px solid var(--accent-color);
         }
         
         .timeline-content.active {
             display: block;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+        
+        .timeline-content h2 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-size: 24px;
+        }
+        
+        .timeline-content p {
+            margin-bottom: 15px;
+            line-height: 1.7;
+        }
+        
+        .timeline-content p strong {
+            color: var(--primary-color);
+        }
+        
+        .timeline-content a {
+            color: var(--accent-color);
+            text-decoration: none;
+        }
+        
+        .timeline-content a:hover {
+            text-decoration: underline;
         }
         
         blockquote {
-            border-left: 3px solid #FF3928;
-            margin: 10px 0;
-            padding-left: 15px;
+            border-left: 4px solid var(--accent-color);
+            margin: 20px 0;
+            padding: 15px 20px;
             font-style: italic;
+            background-color: rgba(255, 57, 40, 0.05);
+            border-radius: 0 6px 6px 0;
         }
         
-        .stakeholder {
-            transition: opacity 0.3s ease;
+        blockquote p {
+            margin: 0;
         }
         
-        .stakeholder.inactive {
-            opacity: 0.3;
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #777;
+            transition: color var(--transition-speed);
+        }
+        
+        .close-btn:hover {
+            color: var(--accent-color);
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @media (max-width: 1000px) {
+            .timeline-content {
+                width: 150%;
+                left: -25%;
+            }
+        }
+        
+        @media (max-width: 900px) {
+            .pain-points-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 768px) {
             .timeline {
                 flex-direction: column;
                 align-items: flex-start;
+                padding: 0;
             }
             
             .timeline::after {
-                width: 4px;
-                height: 100%;
-                top: 0;
-                left: 15px;
+                width: 6px;
+                height: calc(100% - 80px);
+                top: 40px;
+                left: 20px;
                 transform: none;
             }
             
             .timeline-item {
                 width: 100%;
-                margin-bottom: 30px;
-                padding-left: 50px;
+                margin-bottom: 50px;
+                padding-left: 60px;
             }
             
             .timeline-point {
@@ -154,172 +396,209 @@
                 margin: 0;
             }
             
+            .timeline-title {
+                text-align: left;
+                margin-top: 10px;
+            }
+            
             .timeline-content {
-                position: static;
+                position: relative;
                 width: 100%;
                 left: 0;
+                margin-top: 20px;
             }
             
-            .stakeholder-icons {
-                flex-wrap: wrap;
+            .stakeholders-container {
+                grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
             }
-            
-            .stakeholder {
-                margin-bottom: 20px;
+        }
+        
+        @media (max-width: 600px) {
+            .pain-points-container {
+                grid-template-columns: 1fr;
             }
         }
     </style>
 </head>
 <body>
+    <div class="page-header">
+        <h1>Pain Points in Housing Governance</h1>
+        <p>An interactive timeline</p>
+    </div>
+    
     <div class="timeline-container">
-        <div class="stakeholder-icons">
-            <div class="stakeholder">
-                <div class="icon">⚙️</div>
-                <div class="stakeholder-name">Process Management</div>
+        <h3>Pain Points</h3>
+        <div class="pain-points-container">
+            <div class="pain-point">
+                <div class="pain-point-icon">⚙️</div>
+                <div class="pain-point-name">Process Management</div>
+                <div class="pain-point-definition">Inconsistent regulatory oversight and permit approvals create unpredictable timelines for housing developers.</div>
             </div>
-            <div class="stakeholder">
-                <div class="icon">💽</div>
-                <div class="stakeholder-name">Data Management</div>
+            <div class="pain-point">
+                <div class="pain-point-icon">💽</div>
+                <div class="pain-point-name">Data Management</div>
+                <div class="pain-point-definition">Critical information fails to flow between parties, creating redundancies and missed opportunities.</div>
             </div>
-            <div class="stakeholder">
-                <div class="icon">💬</div>
-                <div class="stakeholder-name">Communication</div>
+            <div class="pain-point">
+                <div class="pain-point-icon">💬</div>
+                <div class="pain-point-name">Communication</div>
+                <div class="pain-point-definition">Technical complexity and fragmented markets create barriers in conveying intent between stakeholders.</div>
             </div>
-            <div class="stakeholder">
-                <div class="icon">🧮</div>
-                <div class="stakeholder-name">Resource Allocation</div>
+            <div class="pain-point">
+                <div class="pain-point-icon">🧮</div>
+                <div class="pain-point-name">Resource Allocation</div>
+                <div class="pain-point-definition">Limited staff and infrastructure at city departments create bottlenecks in project approvals and inspections.</div>
             </div>
         </div>
 
-        <div class="stakeholder-icons">
-            <div class="stakeholder">
-                <div class="icon">👷</div>
-                <div class="stakeholder-name">Developers</div>
+        <div class="stakeholders-section">
+            <h3>Stakeholders</h3>
+            
+            <div class="stakeholder-category">
+                <div class="category-title">Private Sector</div>
+                <div class="stakeholders-grid">
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">👷</div>
+                        <div class="stakeholder-name">Builders</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">👨‍⚖️</div>
+                        <div class="stakeholder-name">Legal Teams</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">🏠</div>
+                        <div class="stakeholder-name">Land Owners</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">🏢</div>
+                        <div class="stakeholder-name">Developer</div>
+                    </div>
+                </div>
             </div>
-            <div class="stakeholder">
-                <div class="icon">🏠</div>
-                <div class="stakeholder-name">Land Owners</div>
-            </div>
-            <div class="stakeholder">
-                <div class="icon">📊</div>
-                <div class="stakeholder-name">Data Analysis Teams</div>
-            </div>
-            <div class="stakeholder">
-                <div class="icon">👨‍⚖️</div>
-                <div class="stakeholder-name">Public Officials</div>
-            </div>
-            <div class="stakeholder">
-                <div class="icon">🏦</div>
-                <div class="stakeholder-name">Financing Agencies</div>
-            </div>
-            <div class="stakeholder">
-                <div class="icon">📝</div>
-                <div class="stakeholder-name">Zoning Officers</div>
-            </div>
-            <div class="stakeholder">
-                <div class="icon">🏘️</div>
-                <div class="stakeholder-name">Homeowners' Associations</div>
-            </div>
-            <div class="stakeholder">
-                <div class="icon">🔍</div>
-                <div class="stakeholder-name">City Inspectors</div>
+            
+            <div class="stakeholder-category">
+                <div class="category-title">Public Sector</div>
+                <div class="stakeholders-grid">
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">🏦</div>
+                        <div class="stakeholder-name">Financing Agencies</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">📝</div>
+                        <div class="stakeholder-name">Permitting Officers</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">🏘️</div>
+                        <div class="stakeholder-name">Homeowners' Associations</div>
+                    </div>
+                    <div class="stakeholder">
+                        <div class="stakeholder-icon">🔍</div>
+                        <div class="stakeholder-name">City Inspectors</div>
+                    </div>
+                </div>
             </div>
         </div>
         
-        <div class="timeline">
-            <div class="timeline-item" onclick="toggleContent(0)">
-                <div class="timeline-point"></div>
-                <div class="timeline-title">Site Feasibility Assessment</div>
-                <div class="timeline-content" id="content-0">
-                    <h3>Site Feasibility Assessment</h3>
-                    
-                    <p>The construction of a new housing project begins with the developer conducting site feasibility assessment. This phase is the initial due diligence stage where developers assess all factors governing the suitability of site. Some features that would go in a feasibility assessment are macroeconomic factors such as demographics or financing, municipal requirements, competitor data, and site assessments such as soil quality and construction costs (<a href="https://marsh-partners.com/blog/the-guide-to-a-real-estate-development-feasibility-study" target="_blank">10</a>).</p>
-                    
-                    <p>These site assessments are costly as they require specific interventions for specific sites. As one developer from the Northeast told us:</p>
-                    
-                    <blockquote>
-                        <p><em>Feasibility Assessments are unique to each site largely because site specific tests such as soil testing cannot be scaled.</em></p>
-                    </blockquote>
-                    
-                    <p>Private developers highlighted the need to scope out regulatory compliance at this stage. Most developers we spoke to said they start speaking to city government officials very early in order to accurately estimate project timeline and overheads.</p>
-                    
-                    <p>After conducting site assessments, if the project is deemed feasible, the developer starts paying an options payment to the landowner so that the land is kept off market.</p>
+        <div class="timeline-wrapper">
+            <div class="timeline">
+                <div class="timeline-item" onclick="toggleContent(0)">
+                    <div class="timeline-point"></div>
+                    <div class="timeline-title">Assessment</div>
+                    <div class="timeline-content" id="content-0">
+                        <button class="close-btn" onclick="closeContent(event)">×</button>
+                        <h2>Assessment</h2>
+                        
+                        <p>The construction of a new housing project begins with the developer conducting site feasibility assessment. This phase is the initial due diligence stage where builders assess all factors governing the suitability of site. Some features that would go in a feasibility assessment are macroeconomic factors such as demographics and federal interest rates, as well as local factors like municipal requirements, competitor data, and site assessments such as soil quality and construction costs (<a href="https://marsh-partners.com/blog/the-guide-to-a-real-estate-development-feasibility-study" target="_blank">1</a>).</p>
+                        
+                        <p>These assessments are costly as they require specific interventions for specific sites. As one developer from the Northeast told us:</p>
+                        
+                        <blockquote>
+                            <p><em>Feasibility Assessments are unique to each site largely because site specific tests such as soil testing cannot be scaled.</em></p>
+                        </blockquote>
+                        
+                        <p>Private builders highlighted the need to scope out regulatory compliance at this stage. Most builders we spoke to said they start speaking to city government officials very early during project conception to accurately estimate project timeline and overheads.</p>
+                        
+                        <p>After conducting site assessments, if the project is deemed feasible, the developer starts paying an options payment to the landowner so that the land is kept off market.</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="timeline-item" onclick="toggleContent(1)">
-                <div class="timeline-point"></div>
-                <div class="timeline-title">Financing</div>
-                <div class="timeline-content" id="content-1">
-                    <h3>Financing</h3>
-                    
-                    <p>Projects that are designated as "affordable" have a wide selection of public financing options to leverage on. However, there is often more demand than supply for these financing, as a result, the application process to get these funds are very competitive and can take several months.</p>
-                    
-                    <p>As another developer from New York told us, these applications require significant investment of resources from the real estate companies.</p>
-                    
-                    <blockquote>
-                        <p><em>Getting public funding, especially LITEC funding, requires development firms to optimise their entire operating process for application seasons.</em></p>
-                    </blockquote>
-                    
-                    <p>More importantly, if a developer doesn't get a fund in their first round of applications, it may be several months before they can apply again (<a href="https://www.spur.org/news/2018-06-21/what-we-talk-about-when-we-talk-about-affordable-housing-primer" target="_blank">12</a>). As a result, public financing is largely limited to specialised firms operating in this niche. Most other developers are getting their funding from private sources and building market rate housing.</p>
+                
+                <div class="timeline-item" onclick="toggleContent(1)">
+                    <div class="timeline-point"></div>
+                    <div class="timeline-title">Financing</div>
+                    <div class="timeline-content" id="content-1">
+                        <button class="close-btn" onclick="closeContent(event)">×</button>
+                        <h2>Financing</h2>
+                        
+                        <p>Projects that are designated as "affordable" have a wide selection of public financing options to leverage. However, there is often more demand than supply for these financing. As a result, public financing is very competitive and requires a long timeline of planning.</p>
+                        
+                        <p>As another developer from New York told us, these applications require significant investment of resources from the real estate companies.</p>
+                        
+                        <blockquote>
+                            <p><em>Getting public funding, especially LITEC funding, requires Developer to optimise their entire operating process for application seasons.</em></p>
+                        </blockquote>
+                        
+                        <p>More importantly, if a developer doesn't get a fund in their first round of applications, it may be several months before they can apply again (<a href="https://www.spur.org/news/2018-06-21/what-we-talk-about-when-we-talk-about-affordable-housing-primer" target="_blank">2</a>). As a result, public financing is largely limited to specialised firms operating in this niche. Most other builders need to source funding from private sources.</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="timeline-item" onclick="toggleContent(2)">
-                <div class="timeline-point"></div>
-                <div class="timeline-title">Entitlements</div>
-                <div class="timeline-content" id="content-2">
-                    <h3>Entitlements</h3>
-                    
-                    <p>Once the site and the financing has been confirmed, the developer must obtain formal approval from the city government. A typical range of permits a developer needs to get can be:</p>
-                    
-                    <p><strong>Land Use and Zoning Permits:</strong> These permits attest that the developer can begin in the site and require them to submit details about their planned unit. However, land zoning in America is not friendly for all types of development. This sentiment was echoed by all stakeholders who stated that</p>
-                    
-                    <blockquote>
-                        <p><em>A significant challenge to the development of new housing is that much of the land is not available for dense housing</em></p>
-                    </blockquote>
-                    
-                    <p>Hence, in certain cases, developers may need to submit rezoning applications or variance requests for exceptions to zoning requirements. However, these zoning applications are unique to each developer. As a public housing official from the West Coast told us:</p>
-                    
-                    <blockquote>
-                        <p><em>Rezoning applications are approved as a variance rather than a formal change to the zoning law. Its difficult to communicate across departments about projects that have gotten variances previously. As a result, each developer must go through the same lengthy and time-consuming process, even for similar projects as similar sites.</em></p>
-                    </blockquote>
-                    
-                    <p><strong>Environmental Permits</strong>: These permits require the developer to assess their environmental impact. These regulations can require environmental testing such as soil testing to ensure that residential houses are not built on top of contaminated industrial land.</p>
-                    
-                    <p><strong>Site Plan and Design Permits</strong>: These permits relate to the site and design characteristics of new development. Developers may require to get utility connection permits for water, sewer, and electricity; or get approvals on their architectural plans or elevations. Buildings need to be checked for fire code compliance and other building regulatory standards. However, ensuring code compliance is not easy as so much of it still depends on individual interpretation. According to one private developer</p>
-                    
-                    <blockquote>
-                        <p><em>Two fire marshals in the same county can have two differing interpretations of the same building codes</em></p>
-                    </blockquote>
-                    
-                    <p>Lack of consistency means that developers may need to submit multiple iterations of their building design before getting approval. This process however is extremely long and struggles due to the aging IT infrastructure of the public sector.</p>
-                    
-                    <blockquote>
-                        <p><em>Some code enforcers might be tracking changes to your designs via email—a process that doesn't work for iterative communications where file chains might get lost and emails missed.</em></p>
-                    </blockquote>
-                    
-                    <p>Depending on the jurisdiction, developers may be subject to Public Design Reviews where community residents come to give feedback on site plans. Most entitlements phase require developers to hold community engagement sessions to get their feedback. These meetings are especially important, as resistance from residents can make city government hesitant in approving some permits. However, multiple stakeholders in both public and private sectors highlighted the communication gap in these public engagement sessions that often leads to inefficiencies, delays, and missed opportunities for creating more housing. A common sentiment we heard expressed was</p>
-                    
-                    <blockquote>
-                        <p><em>Public stakeholders at these meetings are hesitant of change and need to be assured that the project doesn't impact their lives too much.</em></p>
-                    </blockquote>
-                    
-                    <p><strong>Construction Management Plan</strong>: These permits ensure that the developers is taking steps to mitigate the negative externalities of construction like noise, dust, traffic, and waste.</p>
-                    
-                    <p>Unsurprisingly, the entitlements phase are one of the longest stages of a project and can take anywhere from one to two years. This timeline is especially significant for the developers who need to pay options payments for landowners while obtaining the needed permits. It is only after approval is received that most private developers actually buy the site.</p>
+                
+                <div class="timeline-item" onclick="toggleContent(2)">
+                    <div class="timeline-point"></div>
+                    <div class="timeline-title">Entitlements</div>
+                    <div class="timeline-content" id="content-2">
+                        <button class="close-btn" onclick="closeContent(event)">×</button>
+                        <h2>Entitlements</h2>
+                        
+                        <p>At this stage, the developer must obtain formal approval from the city government. A typical range of permits a developer needs to get can be:</p>
+                        
+                        <p><strong>Land Use and Zoning Permits:</strong> These permits attest that the developer can begin in the site and require detailed documentation on the project.
+                        
+                        <p>In certain cases, builders may need to submit rezoning applications or variance requests for exceptions to zoning requirements. However, these zoning applications are unique to each developer. As a public housing official from the West Coast told us:</p>
+                        
+                        <blockquote>
+                            <p><em>Rezoning applications are approved as a variance rather than a formal change to the zoning law. Its difficult to communicate across departments about projects that have gotten variances previously. As a result, each developer must go through the same lengthy and time-consuming process, even for similar projects as similar sites.</em></p>
+                        </blockquote>
+                        
+                        <p><strong>Environmental Permits</strong>: Depending on the state and local regulations, environmental permits attest that a development meets certain environmental standards. Documentation for these permits can include results of environmental tests such as soil testing, air quality testing, and water quality testing </p>
+                        
+                        <p><strong>Site Plan and Design Permits</strong>: These permits relate to the site and design characteristics of the development. Developers may need to get utility connection permits for water, sewer, and electricity; or get approvals on their architectural plans and elevations. Buildings also need to be checked for fire code compliance and other physical regulatory standards.</p>
+                        
+                        <p> Sometimes these regulations may not be easily accessible or standardized, resulting in compliance difficulties. According to one private developer</p>
+                        
+                        <blockquote>
+                            <p><em>Two fire marshals in the same county can have two differing interpretations of the same building codes</em></p>
+                        </blockquote>
+                        
+                        <p>Owing to this lack of consistency, even experienced developers need to submit multiple iterations of their building design before getting approval.</p>
+                        
+                        <p> Compounding these issues is the aging public IT infrawstrucuture. According to an East Coast developer</p> 
+                        
+                        <blockquote>
+                            <p><em>Some code enforcers might be tracking changes to your designs via email—a process that doesn't work for iterative communications where file chains might get lost and emails missed.</em></p>
+                        </blockquote>
+                        
+                        <p>Depending on the jurisdiction, builders may be subject to Public Design Reviews where community residents come to give feedback on site plans. Most entitlements phase require builders to hold community engagement sessions to get their feedback. These meetings are especially important, as resistance from residents can make city government hesitant in approving some permits. However, multiple stakeholders in both public and private sectors highlighted the communication gap in these public engagement sessions that often leads to inefficiencies, delays, and missed opportunities for creating more housing. A common sentiment we heard expressed was</p>
+                        
+                        <blockquote>
+                            <p><em>Public stakeholders at these meetings are hesitant of change and need to be assured that the project doesn't impact their lives too much.</em></p>
+                        </blockquote>
+                        
+                        <p><strong>Construction Management Plan</strong>: These permits ensure that the builders is taking steps to mitigate the negative externalities of construction like noise, dust, traffic, and waste.</p>
+                        
+                        <p>Unsurprisingly, the entitlements phase are one of the longest stages of a project and can take anywhere from one to two years. This timeline is especially significant for the builders who need to pay options payments for landowners while obtaining the needed permits.</p>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="timeline-item" onclick="toggleContent(3)">
-                <div class="timeline-point"></div>
-                <div class="timeline-title">Inspections</div>
-                <div class="timeline-content" id="content-3">
-                    <h3>Inspections</h3>
-                    
-                    <p>Once the construction goes underway, the city government conducts regular site inspections to verify that work matches approved plans. These inspections also comprise of specialised checks on structural integrity and fire safety.</p>
-                    
-                    <p>However, public staffing shortages often makes scheduling inspections difficult. This limits the window where inspectors can visit site, significantly lengthening the project timeline.</p>
+                
+                <div class="timeline-item" onclick="toggleContent(3)">
+                    <div class="timeline-point"></div>
+                    <div class="timeline-title">Inspections</div>
+                    <div class="timeline-content" id="content-3">
+                        <button class="close-btn" onclick="closeContent(event)">×</button>
+                        <h2>Inspections</h2>
+                        
+                        <p>Once the construction goes underway, the city government conducts regular site inspections to verify that work matches approved plans. These inspections also comprise of specialised checks on structural integrity and fire safety.</p>
+                        
+                        <p>However, public staffing shortages often makes scheduling inspections difficult. This limits the window where inspectors can visit sites, significantly lengthening the project timeline.</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -341,35 +620,45 @@
             const clickedContent = document.getElementById(`content-${index}`);
             const isActive = clickedContent.classList.toggle('active');
             
-            // Scroll to the content if it's active
+            // No scrolling after click
             if (isActive) {
-                // Wait a tiny bit for the display to change
-                setTimeout(() => {
-                    clickedContent.scrollIntoView({behavior: "smooth", block: "center"});
-                }, 50);
                 
                 // Get stakeholders mentioned in the current section
-                const contentText = clickedContent.innerText.toLowerCase();
                 const relevantStakeholders = [];
+                const relevantPainPoints = [];
                 
                 // Check which stakeholders are mentioned
                 if (index === 0) { // Site Feasibility Assessment
-                    relevantStakeholders.push('developers', 'land owners', 'data analysis teams', 'public officials','data management');
+                    relevantStakeholders.push('builders', 'land owners', 'developer', 'legal teams');
+                    relevantPainPoints.push('data management');
                 } else if (index === 1) { // Financing
-                    relevantStakeholders.push('developers', 'financing agencies','resource allocation');
+                    relevantStakeholders.push('financing agencies', 'developer');
+                    relevantPainPoints.push('resource allocation');
                 } else if (index === 2) { // Entitlements
-                    relevantStakeholders.push('developers', 'public officials', 'zoning officers', 'homeowners\' associations','process management','data management','communication');
+                    relevantStakeholders.push('builders', 'legal teams', 'permitting officers', 'homeowners\' associations', 'developer');
+                    relevantPainPoints.push('process management','data management','communication');
                 } else if (index === 3) { // Inspections
-                    relevantStakeholders.push('developers', 'city inspectors', 'process management','resource allocation');
+                    relevantStakeholders.push('builders', 'city inspectors','developer');
+                    relevantPainPoints.push('process management','resource allocation');
                 }
                 
                 // Apply inactive class to non-relevant stakeholders
-                stakeholders.forEach(stakeholder => {
+                document.querySelectorAll('.stakeholder').forEach(stakeholder => {
                     const stakeholderName = stakeholder.querySelector('.stakeholder-name').innerText.toLowerCase();
-                    if (relevantStakeholders.some(s => stakeholderName.includes(s))) {
+                    if (relevantStakeholders.some(s => stakeholderName.toLowerCase().includes(s))) {
                         stakeholder.classList.remove('inactive');
                     } else {
                         stakeholder.classList.add('inactive');
+                    }
+                });
+                
+                // Apply inactive class to non-relevant pain points
+                document.querySelectorAll('.pain-point').forEach(painPoint => {
+                    const painPointName = painPoint.querySelector('.pain-point-name').innerText.toLowerCase();
+                    if (relevantPainPoints.some(p => painPointName.toLowerCase().includes(p))) {
+                        painPoint.classList.remove('inactive');
+                    } else {
+                        painPoint.classList.add('inactive');
                     }
                 });
             } else {
@@ -378,6 +667,26 @@
                     stakeholder.classList.remove('inactive');
                 });
             }
+        }
+        
+        function closeContent(event) {
+            // Prevent the click from propagating to the parent
+            event.stopPropagation();
+            
+            // Find the parent content element and remove the active class
+            const contentElement = event.target.closest('.timeline-content');
+            contentElement.classList.remove('active');
+            
+            // Make all stakeholders and pain points visible
+            const stakeholders = document.querySelectorAll('.stakeholder');
+            stakeholders.forEach(stakeholder => {
+                stakeholder.classList.remove('inactive');
+            });
+            
+            const painPoints = document.querySelectorAll('.pain-point');
+            painPoints.forEach(painPoint => {
+                painPoint.classList.remove('inactive');
+            });
         }
     </script>
 </body>
